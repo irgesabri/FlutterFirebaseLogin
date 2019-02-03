@@ -1,5 +1,7 @@
-import 'package:ahbap/login_page.dart';
+import 'package:ahbap/root_page.dart';
 import 'package:flutter/material.dart';
+import 'auth.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -10,7 +12,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: RootPage(
+        auth: new Auth(),
+      ),
     );
   }
 }
