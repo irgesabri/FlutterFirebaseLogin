@@ -1,3 +1,4 @@
+import 'package:ahbap/home_page.dart';
 import 'package:ahbap/login_page.dart';
 import 'package:flutter/material.dart';
 import 'auth.dart';
@@ -29,6 +30,12 @@ class _RootPageState extends State<RootPage> {
     });
   }
 
+  void _notSignedIn() {
+    setState(() {
+      _authStatus = AuthStatus.notSignedIn;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     switch (_authStatus) {
@@ -38,13 +45,9 @@ class _RootPageState extends State<RootPage> {
           onSignedIn: _signedIn,
         );
       case AuthStatus.signedIn:
-        return Scaffold(
-          appBar: AppBar(
-            title: Text("Home"),
-          ),
-          body: Container(
-            child: Text("Welcome"),
-          ),
+        return HomePage(
+          auth: widget.auth,
+          onSignedOut: _notSignedIn,
         );
     }
   }

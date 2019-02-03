@@ -1,8 +1,9 @@
+import 'package:ahbap/utils.dart';
 import 'package:flutter/material.dart';
 import 'auth.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({this.auth,this.onSignedIn});
+  LoginPage({this.auth, this.onSignedIn});
   final BaseAuth auth;
   final VoidCallback onSignedIn;
 
@@ -13,6 +14,8 @@ class LoginPage extends StatefulWidget {
 enum FormType { login, register }
 
 class _LoginPageState extends State<LoginPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   final formKey = new GlobalKey<FormState>();
   String _email;
   String _password;
@@ -20,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Login Page"),
       ),
@@ -41,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
       TextFormField(
         decoration: InputDecoration(labelText: 'Email'),
         validator: (value) => value.isEmpty ? 'Email can\t be empty' : null,
-        onSaved: (value) => _email = value,
+        onSaved: (value) => _email = value.trim(),
       ),
       TextFormField(
         decoration: InputDecoration(labelText: 'Password'),
@@ -120,7 +124,10 @@ class _LoginPageState extends State<LoginPage> {
         if (_formType == FormType.login) {
           String userId =
               await widget.auth.signInWithEmailAndPassword(_email, _password);
-          print("Sign with $userId");
+          if (userId == null) {
+            showInSnackBar(
+                "Kallanıcı adı veya şifre yanlış.", context, _scaffoldKey);
+          }
         } else {
           String user = await widget.auth
               .createUserWithEmailAndPassword(_email, _password);
@@ -128,7 +135,9 @@ class _LoginPageState extends State<LoginPage> {
         }
         widget.onSignedIn();
       } catch (e) {
-        print(e);
+        showInSnackBar(
+            "Kallanıcı adı veya şifre yanlış.", context, _scaffoldKey);
+       
       }
     }
   }
